@@ -20,6 +20,7 @@ object EmgHelpLine {
     val data = sc.textFile(args(0))
     val header = data.first()
 
+    //removing first element
     val emgdata = data.filter(h => h!=header)
     val emergency_data = emgdata.map(x=>x.split(",")).filter(x => x.length>=9)
       .map(x => emergency(x(0),x(1),x(2),x(3),x(4).substring(0,x(4).indexOf(":")),x(5),x(6),x(7),x(8)))
