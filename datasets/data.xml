@@ -1,0 +1,23 @@
+<tradedata>
+<stock id="infy">
+	<stock_name>Infosys Ltd</stock_name>
+	<open_price>1108</open_price>
+	<intraday_high>1132</intraday_high>
+	<intraday_low>1101</intraday_low>
+	<publish_date>10232015</publish_date>
+</stock>
+<stock id="TCS">
+	<stock_name>TATA Consultancy Services</stock_name>
+	<open_price>2327</open_price>
+	<intraday_high>2398</intraday_high>
+	<intraday_low>2345</intraday_low>
+	<publish_date>10232015</publish_date>
+</stock>
+<stock id="REL">
+	<stock_name>RELIANCE</stock_name>
+	<open_price>1098</open_price>
+	<intraday_high>1099</intraday_high>
+	<intraday_low>1067</intraday_low>
+	<publish_date>10232015</publish_date>
+</stock>
+</tradedata>
