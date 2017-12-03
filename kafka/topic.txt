@@ -1,0 +1,62 @@
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-topics.sh --zookeeper 10.188.193.161:2181 --create --topic test_topic1 --partitions 2 --replication-factor 1
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-topics.sh --list --zookeeper 10.188.193.161:2181
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-console-producer.sh --broker-list 10.188.193.161:6667 --topic test_topic1
+
+
+not working
+-----------
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-console-consumer.sh --zookeeper 10.188.193.161:2181 --topic test_topic1 --from-beginning
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-console-consumer.sh --new-consumer --topic test_topic1 --from-beginning --bootstrap-server 10.188.193.161:9092
+
+
+
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.188.193.161:9092 --topic test_topic1
+
+
+zip -d /home/dev/subhrajit/spark_first_program.jar META-INF/*.RSA META-INF/*.DSA META-INF/*.SF
+
+
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:kafka_test_producer.jar" kafka.test.producer
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:kafka_test_consumer.jar" test.kafka.consumer
+
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/spark_first_programs.jar" ConsumerExample
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/spark_first_programs.jar" ProducerExample
+
+
+netstat -lnap | grep 4040
+kill -9 
+
+
+/usr/hdp/2.6.1.0-129/spark2/bin/spark-shell --jars "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"
+
+
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-topics.sh --create \
+ --topic spark-test-topic \
+ --zookeeper 10.188.193.161:2181 \
+ --partitions 1 \
+ --replication-factor 1
+
+
+/usr/hdp/2.6.1.0-129/kafka/bin/kafka-console-producer.sh --broker-list 10.188.193.161:6667 --topic spark-test-topic
+
+val kafkaStream = KafkaUtils.createStream(ssc, "10.188.193.161:2181","spark-streaming-consumer-group", Map("spark-test-topic" -> 5))
+
+
+/usr/hdp/2.6.1.0-129/spark2/bin/spark-submit --jars "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --driver-class-path "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --conf spark.executor.extraClassPath="/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --class Kafka_Streaming "/home/dev/subhrajit/sample.jar"
+
+
+If you want a certain JAR to be effected on both the Master and the Worker, you have to specify these separately in BOTH flags.
+
+
+from a file
+-----------
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/saprk/sample.jar" ProducerSample "/home/dev/subhrajit/saprk/data.dat"
+
+
+/usr/hdp/2.6.1.0-129/spark2/bin/spark-submit --jars "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --driver-class-path "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --conf spark.executor.extraClassPath="/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar" --class win.check.Spark_Streaming "/home/dev/subhrajit/spark_submit/Spark_Streaming.jar" "adclicks,adviews"
