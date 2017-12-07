@@ -34,8 +34,6 @@ kill -9
 
 /usr/hdp/2.6.1.0-129/spark2/bin/spark-shell --jars "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"
 
-
-
 /usr/hdp/2.6.1.0-129/kafka/bin/kafka-topics.sh --create \
  --topic spark-test-topic \
  --zookeeper 10.188.193.161:2181 \
@@ -56,7 +54,32 @@ If you want a certain JAR to be effected on both the Master and the Worker, you 
 
 from a file
 -----------
-java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/saprk/sample.jar" ProducerSample "/home/dev/subhrajit/saprk/data.dat"
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/spark/sample.jar" ProducerSample "/home/dev/subhrajit/saprk/data.dat"
 
 
 /usr/hdp/2.6.1.0-129/spark2/bin/spark-submit --jars "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --driver-class-path "/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar"   --conf spark.executor.extraClassPath="/home/dev/subhrajit/jars/kafka_2.11-0.10.1.0.jar","/home/dev/subhrajit/jars/kafka-clients-0.10.1.0.jar","/home/dev/subhrajit/jars/spark-streaming-kafka-0-10_2.11-2.1.1.jar" --class win.check.Spark_Streaming "/home/dev/subhrajit/spark_submit/Spark_Streaming.jar" "adclicks,adviews"
+
+
+Kafka with file
+---------------
+java -cp "/usr/hdp/2.6.1.0-129/kafka/libs/*:/home/dev/subhrajit/spark/kafkafileoutput_2.11-0.1.jar" KafkaFileOperation "/home/dev/subhrajit/data/csvdata/" "/home/dev/subhrajit/data/csvdata1/" ".csv"
+
+
+spark streaming to hbase
+------------------------
+spark-submit --jars /usr/hdp/2.6.1.0-129/spark/lib/spark-examples-1.6.3.2.6.1.0-129-hadoop2.7.3.2.6.1.0-129.jar \
+	/home/dev/subhrajit/spark_submit/hbasesparkssc.py 10.188.193.161 8899  
+	
+hbase jars = /usr/hdp/2.6.1.0-129/hbase/lib/hbase-client.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-common.jar,/home/dev/subhrajit/spark_submit/hbase-0.90.1.jar	
+
+pyspark --jars /usr/hdp/2.6.1.0-129/spark/lib/spark-examples-1.6.3.2.6.1.0-129-hadoop2.7.3.2.6.1.0-129.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-client.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-common.jar,/home/dev/subhrajit/spark_submit/hbase-0.90.1.jar
+
+spark-submit --jars /usr/hdp/2.6.1.0-129/spark/lib/spark-examples-1.6.3.2.6.1.0-129-hadoop2.7.3.2.6.1.0-129.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-examples.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-client.jar,/usr/hdp/2.6.1.0-129/hbase/lib/hbase-common.jar,/home/dev/subhrajit/spark_submit/hbase-0.90.1.jar /home/dev/subhrajit/spark_submit/hbasesparkssc.py 10.188.193.161 8899 > sp_json.log
+
+working
+-------
+spark-shell --master yarn-client --driver-class-path=/usr/hdp/2.6.1.0-129/hbase/lib/hbase-common.jar:/usr/hdp/2.6.1.0-129/hbase/lib/hbase-client.jar:/usr/hdp/2.6.1.0-129/hbase/lib/hbase-protocol.jar:/usr/hdp/2.6.1.0-129/hbase/lib/hbase-server.jar:/etc/hbase/conf:/usr/hdp/2.6.1.0-129/oozie/share/lib/spark/guava-14.0.1.jar --packages it.nerdammer.bigdata:spark-hbase-connector_2.10:1.0.3
+
+qrun_load_self
+--------------
+spark-submit --master yarn --deploy-mode client /home/dev/subhrajit/spark_submit/qrun_load_self.py /user/dev/subhrajit/sequence /home/dev/subhrajit/spark_submit/maxseq.txt
