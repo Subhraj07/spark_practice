@@ -107,3 +107,15 @@ get 'driver_dangerous_event','1',{COLUMN => 'events:driverName'}
 get 'driver_dangerous_event','1',{COLUMNS => ['events:driverName','events:routeId']}
 
 */
+
+/****************************************/
+/*    loading into hbase                */
+/***************************************/
+/* https://github.com/nerdammer/spark-hbase-connector */
+/*
+create 'mytable','mycf'
+val rdd = sc.parallelize(1 to 100).map(i => (i.toString, i+1, "Hello"))
+rdd.toHBaseTable("mytable").toColumns("column1", "column2").inColumnFamily("mycf").save()
+
+
+*/
