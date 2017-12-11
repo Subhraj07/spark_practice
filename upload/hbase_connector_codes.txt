@@ -1,0 +1,139 @@
+#### https://github.com/nerdammer/spark-hbase-connector ####
+
+import it.nerdammer.spark.hbase._
+
+#### Writing to HBase (Basic)
+
+val rdd = sc.parallelize(1 to 100).map(i => (i.toString, i+1, "Hello"))
+
+
+This rdd is made of tuples like ("1", 2, "Hello") or ("27", 28, "Hello"). 
+The first element of each tuple is considered the row id, the others will be assigned to columns
+
+rdd.toHBaseTable("mytable").toColumns("column1", "column2").inColumnFamily("mycf").save()
+	
+#### Reading from HBase (Basic)
+
+including rowid
+---------------
+val hBaseRDD = sc.hbaseTable[(String, Int, String)]("mytable").select("column1", "column2").inColumnFamily("mycf")	
+
+not inclusing rowid
+-------------------
+val hBaseRDD = sc.hbaseTable[(Int, String)]("mytable").select("column1", "column2").inColumnFamily("mycf")
+
+val hBaseRDD = sc.hbaseTable[(String,Int, String)]("employee").select("name", "city").inColumnFamily("emp_personal_data")
+
+val hBaseRDD = sc.hbaseTable[(String, String, String)]("employee").select("designation","emp_personal_data:name","emp_personal_data:city").inColumnFamily("emp_professional_data")
+
+#### Managing Empty Columns
+
+val rdd = sc.hbaseTable[(Option[String], String)]("employee").select("name", "city").inColumnFamily("emp_personal_data")
+
+rdd.foreach(t => { if(t._1.nonEmpty) println(t._1.get) })
+
+#### Using different column families
+
+alter 'mytable', 'cf1'
+alter 'mytable', 'cf2'
+
+val data = sc.parallelize(1 to 100).map(i => (i.toString, i+1, "Hello"))
+data.toHBaseTable("mytable").toColumns("column1", "cf2:column2").inColumnFamily("cf1").save()
+
+val count = sc.hbaseTable[(String, String)]("mytable").select("cf1:column1", "column2").inColumnFamily("cf2").count
+
+#### Spark Streaming
+
+Not Working
+-----------
+stream.foreachRDD(rdd =>
+    rdd.toHBaseTable("table")
+      .inColumnFamily("cf")
+      .toColumns("col1")
+      .save()
+    )
+	
+msg.foreachRDD(rdd => rdd.split(",").toHBaseTable("mytable").inColumnFamily("cff").toColumns("col1").save())
+
+msg.map(rdd=>rdd.split(",")).foreachRDD(rdd => rdd.toHBaseTable("mytable").inColumnFamily("cff").toColumns("col1").save())	
+
+#### HBaseRDD as Spark Dataframe
+
+val hBaseRDD = sparkContext.hbaseTable[(Option[String], Option[String], Option[String], Option[String], Option[String])](HBASE_TABLE_NAME)
+	.select("column1", "column2","column3","column4","column5").inColumnFamily(HBASE_COLUMN_FAMILY)
+	
+val rowRDD = hBaseRDD.map(i => Row(i._1.get,i._2.get,i._3.get,i._4.get,i._5.get))
+
+object myschema {
+      val column1 = StructField("column1", StringType)
+      val column2 = StructField("column2", StringType)
+      val column3 = StructField("column2", StringType)
+      val column4 = StructField("column2", StringType)
+      val column5 = StructField("column2", StringType)
+      val struct = StructType(Array(column1,column2,column3,column4,column5))
+    }
+
+val myDf = sqlContext.createDataFrame(rowRDD,myschema.struct)
+
+myDF.show()
+
+#### SparkSQL on HBase	
+
+myDF.registerTempTable("mytable")
+sqlContext.sql("SELECT * FROM mytable").show()
+
+#### Custom Mapping with Case Classes
+
+case class MyData(id: Int, prg: Int, name: String)
+
+implicit def myDataWriter: FieldWriter[MyData] = new FieldWriter[MyData] {
+    override def map(data: MyData): HBaseData =
+      Seq(
+        Some(Bytes.toBytes(data.id)),
+        Some(Bytes.toBytes(data.prg)),
+        Some(Bytes.toBytes(data.name))
+      )
+
+    override def columns = Seq("prg", "name")
+}
+
+implicit def myDataReader: FieldReader[MyData] = new FieldReader[MyData] {
+    override def map(data: HBaseData): MyData = MyData(
+      id = Bytes.toInt(data.head.get),
+      prg = Bytes.toInt(data.drop(1).head.get),
+      name = Bytes.toString(data.drop(2).head.get)
+    )
+
+    override def columns = Seq("prg", "name")
+}
+
+val data = sc.parallelize(1 to 100).map(i => new MyData(i, i, "Name" + i.toString))
+// data is an RDD[MyData]
+
+data.toHBaseTable("mytable")
+  .inColumnFamily("mycf")
+  .save()
+
+val read = sc.hbaseTable[MyData]("mytable")
+  .inColumnFamily("mycf")
+  
+  
+#### High-level converters using FieldWriterProxy
+
+// MySimpleData is a case class
+case class MySimpleData(id: Int, prg: Int, name: String)
+
+implicit def myDataWriter: FieldWriter[MySimpleData] = new FieldWriterProxy[MySimpleData, (Int, Int, String)] {
+
+  override def convert(data: MySimpleData) = (data.id, data.prg, data.name) // the first element is the row id
+
+  override def columns = Seq("prg", "name")
+}
+
+
+implicit def myDataReader: FieldReader[MySimpleData] = new FieldReaderProxy[(Int, Int, String), MySimpleData] {
+
+  override def columns = Seq("prg", "name")
+
+  override def convert(data: (Int, Int, String)) = MySimpleData(data._1, data._2, data._3)
+}  
