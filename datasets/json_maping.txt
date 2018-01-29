@@ -1,0 +1,16 @@
+LIV_0,PO_0_(V),VOP_0_(V),WPE_0_(%),LWL_0_(NM),RWL_0_(NM),,
+LIV_25,PO_25_(V),VOP_25_(V),WPE_25_(%),LWL_25_(NM),RWL_25_(NM),,
+LIV_55,IOP_(A),PO_55_(V),V_LC_55_(V),VOP_55_(V),WPE_55_(%),LWL_55_(NM),RWL_55_(NM)
+FF_0,na_0,p7mm_0_(mw),,,,,
+FF_25,na_25,p7mm_25_(mw),,,,,
+FF_55,na_55,p7mm_55_(mw),,,,,
+EM,nf,nf1,nf2,nf3,,,
+
+
+
+
+
+
+
+
+
