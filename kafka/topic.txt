@@ -83,3 +83,19 @@ spark-shell --master yarn-client --driver-class-path=/usr/hdp/2.6.1.0-129/hbase/
 qrun_load_self
 --------------
 spark-submit --master yarn --deploy-mode client /home/dev/subhrajit/spark_submit/qrun_load_self.py /user/dev/subhrajit/sequence /home/dev/subhrajit/spark_submit/maxseq.txt
+
+kafka_cloudera
+--------------
+/usr/bin/kafka-topics --zookeeper 10.188.193.152:2181 --create --topic test --partitions 2 --replication-factor 1
+
+/usr/bin/kafka-topics --zookeeper 10.188.193.152:2181 --list
+
+/usr/bin/kafka-console-consumer --zookeeper 10.188.193.152:2181 --topic test
+
+/usr/bin/kafka-console-consumer --zookeeper 10.188.193.152:2181 --topic test --from-beginning
+
+/usr/bin/kafka-console-producer --broker-list 10.188.193.152:9092 --topic test
+
+/usr/bin/kafka-topics --zookeeper 10.188.193.152:2181 --delete --topic test
+
+java -cp "/home/dev/manoj/subhrajit/kafka/libs/*:/home/dev/manoj/subhrajit/kafka/kafka_test_2.11-0.13.8.jar" ProducerSample "test" "/home/dev/manoj/subhrajit/kafka/data.dat"
