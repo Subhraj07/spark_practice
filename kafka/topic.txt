@@ -92,7 +92,7 @@ kafka_cloudera
 
 /usr/bin/kafka-console-consumer --zookeeper 10.188.193.152:2181 --topic test
 
-/usr/bin/kafka-console-consumer --zookeeper 10.188.193.152:2181 --topic test --from-beginning
+/usr/bin/kafka-console-consumer --bootstrap-server 10.188.193.152:9092 --topic testnifi --from-beginning
 
 /usr/bin/kafka-console-producer --broker-list 10.188.193.152:9092 --topic test
 
