@@ -99,3 +99,16 @@ kafka_cloudera
 /usr/bin/kafka-topics --zookeeper 10.188.193.152:2181 --delete --topic test
 
 java -cp "/home/dev/manoj/subhrajit/kafka/libs/*:/home/dev/manoj/subhrajit/kafka/kafka_test_2.11-0.13.8.jar" ProducerSample "test" "/home/dev/manoj/subhrajit/kafka/data.dat"
+
+python as a producer
+-------------------
+pip install kafka-python
+
+from kafka import KafkaProducer
+import time
+
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+while True:
+    message=time.strftime("%Y-%m-%d %H:%M:%S")
+    producer.send('test', message)
+    time.sleep(1)
