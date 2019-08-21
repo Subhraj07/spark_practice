@@ -22,11 +22,11 @@ def getData(num):
             odd.append(i)
     
     for i in range(len(odd)):
-        if i<=len(odd) - 2:
+        if i<=len(odd) - r:
             rm_tuple.append((odd[i],even[i+1]))
         
     for i in range(len(even)):
-        if i<=len(even) - 2:
+        if i<=len(even) - r:
             rm_tuple.append((even[i],odd[i+1]))
     
     for i in main_tup[0]:
